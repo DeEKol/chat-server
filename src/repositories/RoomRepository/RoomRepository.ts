@@ -12,10 +12,12 @@ export default class RoomRepository {
         this.roomRepository = AppDataSource.getRepository(RoomEntity)
     }
 
-    async create(room: IRoomEntity) {
-        await this.roomRepository.save(room);
+    async create(room: any, user: UserEntity) {
+        const newRoom = await this.roomRepository.save({...room, users: [user]});
 
-        return room;
+        // console.log(newRoom)
+
+        return newRoom;
     }
 
     async update(roomId: number, user: UserEntity) {
@@ -25,12 +27,10 @@ export default class RoomRepository {
                 users: true,
             },
             where: {
-                id: roomId
+                id: roomId,
             }
         })
 
-        console.log(room)
-        console.log(user)
 
         await this.roomRepository.save({...room[0], users: [...room[0].users, user]});
 
@@ -38,7 +38,11 @@ export default class RoomRepository {
     }
 
     async findAll() {
-        return await this.roomRepository.find();
+        return await this.roomRepository.find({
+            relations: {
+                users: true,
+            },
+        });
     }
 
     async findOne(id: number) {

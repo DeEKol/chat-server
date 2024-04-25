@@ -33,17 +33,17 @@ export default class RoomController {
     res.status(200).json(room);
   }
 
-  async create(req: Request<{}, {}, RoomEntity>, res: Response) {
-    console.log(req.body)
-    const room: RoomEntity = await this.roomService.create(req.body.name);
+  async create(req: Request, res: Response) {
+    // console.log(req.body)
+    const room: RoomEntity = await this.roomService.create(req.body.name, req.body.userId);
 
-    console.log(room);
+    // console.log(room);
     res.status(200).json(room);
   }
 
   async remove(req: Request, res: Response) {
     const room = await this.roomService.findOne(Number(req.params.id));
-    console.log(room);
+    // console.log(room);
     await this.roomService.remove(room);
     res.status(200).json(room);
   }
@@ -55,13 +55,13 @@ export default class RoomController {
     // console.log(user)
     const room: RoomEntity = await this.roomService.update(req.body.roomId, user[0]);
 
-    console.log(room);
+    // console.log(room);
     res.status(200).json(room);
   }
 
   async findRoomWithUsers(req: Request, res: Response) {
     const users = await this.roomService.findUsers(Number(req.params.id));
-    console.log(users);
+    // console.log(users);
     res.status(200).json(users);
   }
 }
