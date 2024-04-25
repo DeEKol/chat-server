@@ -3,12 +3,15 @@ import MessageEntity from "../../entities/MessageEntity/MessageEntity";
 import {Repository} from "typeorm";
 import IMessageEntity from "../../entities/MessageEntity/IMessageEntity";
 import MessageRepository from "../../repositories/MessageRepository/MessageRepository";
+import RoomRepository from "../../repositories/RoomRepository/RoomRepository";
 
 export default class MessageService {
     messageRepository: MessageRepository;
+    roomRepository: RoomRepository;
 
     constructor() {
         this.messageRepository = new MessageRepository();
+        this.roomRepository = new RoomRepository();
     }
 
     async create(text: string, room: number, user: number, time: string) {
@@ -31,5 +34,12 @@ export default class MessageService {
 
     async remove(message: IMessageEntity) {
         return await this.messageRepository.remove(message);
+    }
+
+    async messagesByRoom(roomId: number) {
+
+        const room = await this.roomRepository.findOne(roomId);
+
+        return await this.messageRepository.messagesByRoom(room);
     }
 }

@@ -4,6 +4,9 @@ import AuthController from "../controllers/AuthController/AuthController";
 import RoomController from "../controllers/RoomController/RoomController";
 import MessageController from "../controllers/MessageController/MessageController";
 import auth from "../middleware/auth";
+import MessageService from "../services/MessageService/MessageService";
+
+const messageService: MessageService = new MessageService();
 
 export const router = (app: Express) => {
     const userController = new UserController();
@@ -31,7 +34,38 @@ export const router = (app: Express) => {
 
     // ! Messages
     app.get("/api/messages", messageController.findAll)
+    app.get("/api/messagesByRoom/:id", messageController.messagesByRoom)
     app.get("/api/message/:id", messageController.findOne)
     app.post("/api/message", messageController.create)
     app.delete("/api/message/:id", messageController.remove)
+}
+
+export const routerSocket = (io: any) => {
+    io.on('connection', (socket: any) => {
+        console.log('a user connected', socket.handshake.auth);
+        const room = socket.handshake.auth.roomId;
+        socket.join(room);
+        socket.on('newMessageForFront', async (data: any) => {
+            console.log('newMessageForFront', data)
+
+            const newMessageForBack = await messageService.create(data.text, data.roomId, data.userId, data.time);
+
+            io.to(room).emit('newMessageForBack', newMessageForBack)
+
+        })
+
+        socket.on('disconnect', function (socket: any) {
+            console.log('a user disconnect');
+        });
+
+        socket.on('dis', () => {
+            console.log('dis');
+            // console.log(io.)
+            io.disconnect;
+        })
+    });
+    io.on('disconnect', function (socket: any) {
+        console.log('a user disconnect', socket.handshake.auth);
+        io.remove()
+    });
 }

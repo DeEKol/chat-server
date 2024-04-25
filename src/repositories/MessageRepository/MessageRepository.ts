@@ -35,4 +35,17 @@ export default class MessageRepository {
     async remove(message: IMessageEntity) {
         return await this.messageRepository.remove(message);
     }
+
+    async messagesByRoom(room: any) {
+        // console.log(roomId)
+        return await this.messageRepository.find({
+            relations: {
+                room: true,
+                user: true,
+            },
+            where: {
+                room: room,
+            }
+        });
+    }
 }
