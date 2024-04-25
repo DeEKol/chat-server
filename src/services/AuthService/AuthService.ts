@@ -22,13 +22,19 @@ export default class AuthService {
 
         console.log(isPassEquals)
 
+        console.log(userFromDB[0].username)
+
         if (isPassEquals) {
-            const token = await TokenService.generateAccessToken(userFromDB.id, userFromDB.username);
+            const token = await TokenService.generateAccessToken(userFromDB[0].id, userFromDB[0].username);
 
             return {
                 user: userFromDB[0],
                 token: token,
             }
         }
+    }
+
+    async checkAuth() {
+        console.log("checkAuth");
     }
 }

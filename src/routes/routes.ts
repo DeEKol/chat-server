@@ -19,6 +19,7 @@ export const router = (app: Express) => {
 
     // ! Auth
     app.post("/api/login", authController.login);
+    app.get("/api/check", authController.checkAuth);
 
     // ! Rooms
     app.get("/api/rooms", roomController.findAll);
