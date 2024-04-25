@@ -1,8 +1,8 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {IUserEntity} from "./IUserEntity";
+import IUserEntity from "./IUserEntity";
 
 @Entity()
-export class UserEntity implements IUserEntity{
+export default class UserEntity implements IUserEntity{
     @PrimaryGeneratedColumn()
     id!: number;
 

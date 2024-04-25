@@ -1,6 +1,4 @@
-import {Column} from "typeorm";
-
-export interface IUserEntity {
+export default interface IUserEntity {
     id: number;
 
     username: string;

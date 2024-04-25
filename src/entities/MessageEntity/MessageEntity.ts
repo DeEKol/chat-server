@@ -1,9 +1,10 @@
 import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {RoomEntity} from "../RoomEntity/RoomEntity";
-import {UserEntity} from "../UserEntity/UserEntity";
+import RoomEntity from "../RoomEntity/RoomEntity";
+import UserEntity from "../UserEntity/UserEntity";
+import IMessageEntity from "./IMessageEntity";
 
 @Entity()
-export class MessageEntity {
+export default class MessageEntity implements IMessageEntity{
     @PrimaryGeneratedColumn()
     id!: number;
 

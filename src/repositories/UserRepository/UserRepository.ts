@@ -1,20 +1,16 @@
 import {AppDataSource} from "../../data-source";
-import {UserEntity} from "../../entities/UserEntity/UserEntity";
-import * as bcrypt from 'bcrypt';
-import {TokenService} from "../../services/TokenService/TokenService";
+import UserEntity from "../../entities/UserEntity/UserEntity";
+import IUserEntity from "../../entities/UserEntity/IUserEntity";
+import {Repository} from "typeorm";
 
-export class UserRepository {
+export default class UserRepository {
     userRepository: any;
 
     constructor() {
         this.userRepository = AppDataSource.getRepository(UserEntity)
     }
 
-    async create(username: string, password: string) {
-        const user = new UserEntity(username, password);
-
-        const hashedPassword = await bcrypt.hash(password, 3);
-
+    async create(user: IUserEntity, hashedPassword: string) {
         await this.userRepository.save({
             ...user,
             password: hashedPassword

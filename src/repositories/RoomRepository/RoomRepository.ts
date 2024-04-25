@@ -1,19 +1,18 @@
 import {AppDataSource} from "../../data-source";
-import {UserEntity} from "../../entities/UserEntity/UserEntity";
-import * as bcrypt from 'bcrypt';
-import {TokenService} from "../../services/TokenService/TokenService";
-import {RoomEntity} from "../../entities/RoomEntity/RoomEntity";
+import UserEntity from "../../entities/UserEntity/UserEntity";
+import RoomEntity from "../../entities/RoomEntity/RoomEntity";
+import IRoomEntity from "../../entities/RoomEntity/IRoomEntity";
+import {Repository} from "typeorm";
+import IUserEntity from "../../entities/UserEntity/IUserEntity";
 
-export class RoomRepository {
+export default class RoomRepository {
     roomRepository: any;
 
     constructor() {
         this.roomRepository = AppDataSource.getRepository(RoomEntity)
     }
 
-    async create(name: string) {
-        const room = new RoomEntity(name)
-
+    async create(room: IRoomEntity) {
         await this.roomRepository.save(room);
 
         return room;
@@ -50,15 +49,22 @@ export class RoomRepository {
         })
     }
 
-    // async findOneForUsername(username: string) {
-    //     return await this.roomRepository.find({
-    //         where: {
-    //             username: username,
-    //         }
-    //     })
-    // }
+    async findRoomWithUsers(roomId: number) {
+        return this.roomRepository.find({
+            relations: {
+                users: true,
+            },
+            where: {
+                id: roomId
+            }
+        })
+    }
 
-    async remove(room: RoomEntity) {
+    async addUser(room: any, user: IUserEntity) {
+        return this.roomRepository.save({...room, users: [...room.users, user]})
+    }
+
+    async remove(room: IRoomEntity) {
         return await this.roomRepository.remove(room);
     }
 

@@ -1,8 +1,8 @@
-import {UserRepository} from "../../repositories/UserRepository/UserRepository";
+import UserRepository from "../../repositories/UserRepository/UserRepository";
 import * as bcrypt from 'bcrypt';
-import {TokenService} from "../TokenService/TokenService";
+import TokenService from "../TokenService/TokenService";
 
-export class AuthService {
+export default class AuthService {
     userRepository: UserRepository;
 
     constructor() {

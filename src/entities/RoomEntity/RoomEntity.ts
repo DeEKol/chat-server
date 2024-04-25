@@ -1,8 +1,8 @@
 import {Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
-import {UserEntity} from "../UserEntity/UserEntity";
+import UserEntity from "../UserEntity/UserEntity";
 
 @Entity()
-export class RoomEntity {
+export default class RoomEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -11,7 +11,7 @@ export class RoomEntity {
 
     @ManyToMany(() => UserEntity)
     @JoinTable()
-    users?: UserEntity[]
+    users?: UserEntity[];
 
     constructor(name: string) {
         this.name = name;

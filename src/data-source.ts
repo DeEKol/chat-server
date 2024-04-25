@@ -1,7 +1,7 @@
 import {DataSource} from "typeorm";
-import {UserEntity} from "./entities/UserEntity/UserEntity";
-import {MessageEntity} from "./entities/MessageEntity/MessageEntity";
-import {RoomEntity} from "./entities/RoomEntity/RoomEntity";
+import UserEntity from "./entities/UserEntity/UserEntity";
+import MessageEntity from "./entities/MessageEntity/MessageEntity";
+import RoomEntity from "./entities/RoomEntity/RoomEntity";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
