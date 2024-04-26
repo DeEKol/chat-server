@@ -24,12 +24,6 @@ app.use(express.json());
 
 router(app);
 
-// io.on('connection', (socket: any) => {
-//     console.log('a user connected');
-//     socket.on('hi', (data: any) => {
-//         console.log('hi', data)
-//     })
-// });
 routerSocket(io);
 
 server.listen(port, host, function () {

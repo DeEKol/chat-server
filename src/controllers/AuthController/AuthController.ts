@@ -32,15 +32,13 @@ export default class AuthController {
     }
 
     async checkAuth(req: Request, res: Response, next:NextFunction) {
-        console.log("check")
         try {
             const authToken = req.header("Authorization");
             const token = authToken?.split(" ")[1];
-            // console.log(token);
 
             if (!token) {
-            console.log("token null")
-            res.status(403).send("Access denied.");
+                console.log("token null")
+                res.status(403).send("Access denied.");
             }
 
             const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);

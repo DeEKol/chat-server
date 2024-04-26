@@ -12,17 +12,11 @@ export default class AuthService {
     async login(username: string, password: string) {
         const userFromDB = await this.userRepository.findOneForUsername(username);
 
-        // console.log(password)
         let isPassEquals;
 
         if (userFromDB[0]) {
             isPassEquals = await bcrypt.compare(password, userFromDB[0].password);
-            // console.log(userFromDB)
         }
-
-        // console.log(isPassEquals)
-
-        // console.log(userFromDB[0].username)
 
         if (isPassEquals) {
             const token = await TokenService.generateAccessToken(userFromDB[0].id, userFromDB[0].username);

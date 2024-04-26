@@ -1,6 +1,5 @@
 import {AppDataSource} from "../../data-source";
 import MessageEntity from "../../entities/MessageEntity/MessageEntity";
-import {Repository} from "typeorm";
 import IMessageEntity from "../../entities/MessageEntity/IMessageEntity";
 
 export default class MessageRepository {
@@ -17,9 +16,6 @@ export default class MessageRepository {
     }
 
     async messageUpdText(id: number, text: string, time: string) {
-        console.log("messageUpdText");
-
-        console.log(id)
         const message = await this.messageRepository.find({
             relations: {
                 room: true,
@@ -29,7 +25,6 @@ export default class MessageRepository {
                 id: id,
             }
         });
-        console.log(message[0]);
 
         const newMessage = await this.messageRepository.save({...message[0], text: text, time: time, isEdited: true});
 
@@ -57,7 +52,6 @@ export default class MessageRepository {
     }
 
     async messagesByRoom(room: any) {
-        // console.log(roomId)
         return await this.messageRepository.find({
             relations: {
                 room: true,

@@ -22,7 +22,7 @@ export default class RoomService {
         const room: IRoomEntity = new RoomEntity(name)
 
         const user = await this.userRepository.findOne(userId);
-        // console.log(user)
+
         const roomFromDb = await this.roomRepository.findOneByRoomName(room.name);
 
 
@@ -36,11 +36,7 @@ export default class RoomService {
     }
 
     async update(roomId: number, user: UserEntity) {
-        // const room = new RoomEntity(name)
         const room = await this.roomRepository.findRoomWithUsers(roomId)
-
-        // console.log(room)
-        // console.log(user)
 
         await this.roomRepository.addUser(room[0], user);
 

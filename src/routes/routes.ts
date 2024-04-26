@@ -18,70 +18,54 @@ export const router = (app: Express) => {
 
     // ! Users
     app.get("/api/users", auth, userController.findAll);
-    app.get("/api/user/:id", userController.findOne);
+    app.get("/api/user/:id", auth, userController.findOne);
     app.post("/api/user", userController.create);
-    app.delete("/api/user/:id", userController.remove);
+    app.delete("/api/user/:id", auth, userController.remove);
 
     // ! Auth
     app.post("/api/login", authController.login);
     app.get("/api/check", authController.checkAuth);
 
     // ! Rooms
-    app.get("/api/rooms", roomController.findAll);
-    app.get("/api/room/:id", roomController.findOne);
-    app.post("/api/room", roomController.create);
-    app.delete("/api/room/:id", roomController.remove)
-    app.put("/api/room", roomController.addUser)
-    app.get("/api/roomUsers/:id", roomController.findRoomWithUsers)
+    app.get("/api/rooms", auth, roomController.findAll);
+    app.get("/api/room/:id", auth, roomController.findOne);
+    app.post("/api/room", auth, roomController.create);
+    app.delete("/api/room/:id", auth, roomController.remove)
+    app.put("/api/room", auth, roomController.addUser)
+    app.get("/api/roomUsers/:id", auth, roomController.findRoomWithUsers)
 
     // ! Messages
-    app.get("/api/messages", messageController.findAll)
-    app.get("/api/messagesByRoom/:id", messageController.messagesByRoom)
-    app.get("/api/message/:id", messageController.findOne)
-    app.post("/api/message", messageController.create)
-    app.post("/api/messageUpdText", messageController.messageUpdText)
-    app.delete("/api/message/:id", messageController.remove)
+    app.get("/api/messages", auth, messageController.findAll)
+    app.get("/api/messagesByRoom/:id", auth, messageController.messagesByRoom)
+    app.get("/api/message/:id", auth, messageController.findOne)
+    app.post("/api/message", auth, messageController.create)
+    app.post("/api/messageUpdText", auth, messageController.messageUpdText)
+    app.delete("/api/message/:id", auth, messageController.remove)
 }
 
 export const routerSocket = (io: any) => {
     io.on('connection', (socket: any) => {
-        console.log('a user connected', socket.handshake.auth);
         const room = socket.handshake.auth.roomId;
         socket.join(room);
         socket.on('newMessageForFront', async (data: any) => {
-            console.log('newMessageForFront', data)
-
             const newMessageForBack = await messageService.create(data.text, data.roomId, data.userId, data.time, data.type);
 
-            console.log(newMessageForBack)
             const user = await userService.findOne(newMessageForBack.user);
 
             io.to(room).emit('newMessageForBack', {...newMessageForBack, user: user[0]})
         })
 
         socket.on('updMessageForFront', async (data: any) => {
-            console.log('newMessageForFront', data)
-
             const updMessageForBack = await messageService.messageUpdText(data.id, data.text, data.time);
-
-            // console.log(newMessageForBack)
-            // const user = await userService.findOne(newMessageForBack.user);
 
             io.to(room).emit('updMessageForBack', updMessageForBack)
         })
 
-        socket.on('disconnect', function (socket: any) {
-            console.log('a user disconnect');
-        });
-
         socket.on('dis', () => {
-            console.log('dis');
-            // console.log(io.)
             io.disconnect;
         })
     });
     io.on('disconnect', function (socket: any) {
-        console.log('a user disconnect', socket.handshake.auth);
         io.remove()
     });
 }

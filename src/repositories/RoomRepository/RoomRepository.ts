@@ -15,13 +15,10 @@ export default class RoomRepository {
     async create(room: any, user: UserEntity) {
         const newRoom = await this.roomRepository.save({...room, users: [user]});
 
-        // console.log(newRoom)
-
         return newRoom;
     }
 
     async update(roomId: number, user: UserEntity) {
-        // const room = new RoomEntity(name)
         const room = await this.roomRepository.find({
             relations: {
                 users: true,
