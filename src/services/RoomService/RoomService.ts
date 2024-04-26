@@ -22,8 +22,13 @@ export default class RoomService {
         const room: IRoomEntity = new RoomEntity(name)
 
         const user = await this.userRepository.findOne(userId);
-
         // console.log(user)
+        const roomFromDb = await this.roomRepository.findOneByRoomName(room.name);
+
+
+        if (room.name === roomFromDb?.name) {
+            throw new Error("Room exists");
+        }
 
         const newRoom = await this.roomRepository.create(room, user[0]);
 
@@ -48,6 +53,10 @@ export default class RoomService {
 
     async findOne(id: number) {
         return await this.roomRepository.findOne(id)
+    }
+
+    async findOneByRoomName(name: string) {
+        return await this.roomRepository.findOneByRoomName(name)
     }
 
     async remove(room: IRoomEntity) {

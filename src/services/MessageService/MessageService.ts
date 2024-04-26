@@ -14,8 +14,8 @@ export default class MessageService {
         this.roomRepository = new RoomRepository();
     }
 
-    async create(text: string, room: number, user: number, time: string) {
-        const message: IMessageEntity = new MessageEntity(text, room, user, time);
+    async create(text: string, room: number, user: number, time: string, type: string) {
+        const message: IMessageEntity = new MessageEntity(text, room, user, time, type);
 
         console.log(message)
 

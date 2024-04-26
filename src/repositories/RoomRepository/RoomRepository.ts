@@ -53,6 +53,14 @@ export default class RoomRepository {
         })
     }
 
+    async findOneByRoomName(name: string) {
+        return await this.roomRepository.findOne({
+            where: {
+                name: name,
+            }
+        })
+    }
+
     async findRoomWithUsers(roomId: number) {
         return this.roomRepository.find({
             relations: {

@@ -34,6 +34,14 @@ export default class UserRepository {
         })
     }
 
+    async findOneByUsername(username: string) {
+        return await this.userRepository.findOne({
+            where: {
+                username: username,
+            }
+        })
+    }
+
     async findOneForUsername(username: string) {
         return await this.userRepository.find({
             where: {

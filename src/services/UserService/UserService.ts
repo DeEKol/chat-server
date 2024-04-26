@@ -10,16 +10,22 @@ export default class UserService {
   }
 
   async create(username: string, password: string) {
-    const user = new UserEntity(username, password);
+      const user = new UserEntity(username, password);
+      const userFromDb = await this.userRepository.findOneByUsername(username);
 
-    const hashedPassword = await bcrypt.hash(password, 3);
+      if (user.username === userFromDb?.username) {
+        throw new Error("User exists");
+      }
 
-    await this.userRepository.create(user, hashedPassword);
+      const hashedPassword = await bcrypt.hash(password, 3);
 
-    return {
-      ...user,
-      password: hashedPassword,
-    };
+      await this.userRepository.create(user, hashedPassword);
+
+      return {
+        ...user,
+        password: hashedPassword,
+      };
+
   }
 
   async findAll() {

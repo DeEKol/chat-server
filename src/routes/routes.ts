@@ -48,9 +48,11 @@ export const routerSocket = (io: any) => {
         socket.on('newMessageForFront', async (data: any) => {
             console.log('newMessageForFront', data)
 
-            const newMessageForBack = await messageService.create(data.text, data.roomId, data.userId, data.time);
+            const newMessageForBack = await messageService.create(data.text, data.roomId, data.userId, data.time, data.type);
 
-            io.to(room).emit('newMessageForBack', newMessageForBack)
+            console.log(newMessageForBack)
+
+            io.to(room).emit('newMessageForBack', {...newMessageForBack, user: {id: newMessageForBack.user}})
 
         })
 
