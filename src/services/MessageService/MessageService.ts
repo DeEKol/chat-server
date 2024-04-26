@@ -4,6 +4,7 @@ import {Repository} from "typeorm";
 import IMessageEntity from "../../entities/MessageEntity/IMessageEntity";
 import MessageRepository from "../../repositories/MessageRepository/MessageRepository";
 import RoomRepository from "../../repositories/RoomRepository/RoomRepository";
+import {Request, Response} from "express";
 
 export default class MessageService {
     messageRepository: MessageRepository;
@@ -20,6 +21,13 @@ export default class MessageService {
         console.log(message)
 
         await this.messageRepository.create(message);
+
+        return message;
+    }
+
+    async messageUpdText(id: number, text: string, time: string) {
+        const message = await this.messageRepository.messageUpdText(id, text, time);
+        // console.log("messageUpdText");
 
         return message;
     }

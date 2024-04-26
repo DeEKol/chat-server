@@ -8,7 +8,7 @@ export default class MessageEntity implements IMessageEntity{
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column()
+    @Column({ type: "longtext" })
     text: string;
 
     @Column()

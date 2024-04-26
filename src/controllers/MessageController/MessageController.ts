@@ -21,6 +21,7 @@ export default class MessageController {
         this.create = this.create.bind(this);
         this.remove = this.remove.bind(this);
         this.messagesByRoom = this.messagesByRoom.bind(this);
+        this.messageUpdText = this.messageUpdText.bind(this);
     }
 
     async findAll(req: Request, res: Response) {
@@ -45,6 +46,14 @@ export default class MessageController {
         const message: MessageEntity = await this.messageService.create(req.body.text, req.body.roomId, req.body.userId, req.body.time, req.body.type);
 
         // console.log(message);
+        res.status(200).json(message);
+    }
+
+    async messageUpdText(req: Request, res: Response) {
+        // console.log("messageUpdText");
+
+        const message = await this.messageService.messageUpdText(req.body.id, req.body.text, req.body.time);
+
         res.status(200).json(message);
     }
 

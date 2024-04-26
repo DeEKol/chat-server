@@ -16,6 +16,26 @@ export default class MessageRepository {
         return message;
     }
 
+    async messageUpdText(id: number, text: string, time: string) {
+        console.log("messageUpdText");
+
+        console.log(id)
+        const message = await this.messageRepository.find({
+            relations: {
+                room: true,
+                user: true,
+            },
+            where: {
+                id: id,
+            }
+        });
+        console.log(message[0]);
+
+        const newMessage = await this.messageRepository.save({...message[0], text: text, time: time, isEdited: true});
+
+        return newMessage;
+    }
+
     async findAll() {
         return await this.messageRepository.find();
     }

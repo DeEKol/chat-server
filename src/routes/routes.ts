@@ -5,8 +5,10 @@ import RoomController from "../controllers/RoomController/RoomController";
 import MessageController from "../controllers/MessageController/MessageController";
 import auth from "../middleware/auth";
 import MessageService from "../services/MessageService/MessageService";
+import UserService from "../services/UserService/UserService";
 
 const messageService: MessageService = new MessageService();
+const userService: UserService = new UserService();
 
 export const router = (app: Express) => {
     const userController = new UserController();
@@ -37,6 +39,7 @@ export const router = (app: Express) => {
     app.get("/api/messagesByRoom/:id", messageController.messagesByRoom)
     app.get("/api/message/:id", messageController.findOne)
     app.post("/api/message", messageController.create)
+    app.post("/api/messageUpdText", messageController.messageUpdText)
     app.delete("/api/message/:id", messageController.remove)
 }
 
@@ -51,9 +54,20 @@ export const routerSocket = (io: any) => {
             const newMessageForBack = await messageService.create(data.text, data.roomId, data.userId, data.time, data.type);
 
             console.log(newMessageForBack)
+            const user = await userService.findOne(newMessageForBack.user);
 
-            io.to(room).emit('newMessageForBack', {...newMessageForBack, user: {id: newMessageForBack.user}})
+            io.to(room).emit('newMessageForBack', {...newMessageForBack, user: user[0]})
+        })
 
+        socket.on('updMessageForFront', async (data: any) => {
+            console.log('newMessageForFront', data)
+
+            const updMessageForBack = await messageService.messageUpdText(data.id, data.text, data.time);
+
+            // console.log(newMessageForBack)
+            // const user = await userService.findOne(newMessageForBack.user);
+
+            io.to(room).emit('updMessageForBack', updMessageForBack)
         })
 
         socket.on('disconnect', function (socket: any) {
