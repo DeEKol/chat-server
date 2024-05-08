@@ -1,5 +1,6 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 import IUserEntity from "./IUserEntity";
+import {Length} from "class-validator";
 
 @Entity()
 export default class UserEntity implements IUserEntity{

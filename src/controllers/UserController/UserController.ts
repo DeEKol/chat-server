@@ -1,7 +1,7 @@
 import UserService from "../../services/UserService/UserService";
 import {Request, Response} from "express";
 import IUserEntity from "../../entities/UserEntity/IUserEntity";
-import TokenService from "../../services/TokenService/TokenService";
+import UserDto from "../../dtos/UserDto/UserDto";
 
 export default class UserController {
     userService: UserService;
@@ -18,35 +18,43 @@ export default class UserController {
     async findAll(req: Request, res: Response) {
         const users = await this.userService.findAll();
 
-        res.status(200).json(users)
+        const usersDto: UserDto[] = users.map((user: IUserEntity) => {
+            return new UserDto(user);
+        })
+
+        res.status(200).json(usersDto);
     }
 
     async findOne (req: Request, res: Response) {
         const user = await this.userService.findOne(Number(req.params.id));
 
-        res.status(200).json(user);
+        const userDto = new UserDto(user);
+
+        res.status(200).json(userDto);
     }
 
     async create (req: Request<{}, {}, IUserEntity>, res: Response) {
         try {
             const user: IUserEntity | undefined = await this.userService.create(req.body.username, req.body.password);
 
-            if (user) {
-                res.status(200).json(user);
+            const userDto = new UserDto(user);
+
+            if (user && userDto) {
+                res.status(200).json(userDto);
             }
         } catch (error) {
             console.warn(error);
             res.status(400).send("User exists");
         }
-
-
     }
 
     async remove(req: Request, res: Response) {
         const user = await this.userService.findOne(Number(req.params.id));
 
+        const userDto = new UserDto(user);
+
         await this.userService.remove(user);
 
-        res.status(200).json(user);
+        res.status(200).json(userDto);
     }
 }

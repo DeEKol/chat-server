@@ -8,7 +8,8 @@ export default class MessageEntity implements IMessageEntity{
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: "longtext" })
+    // @Column({ type: "longtext" }) // ! Для mysql
+    @Column() // ! Для postgresql
     text: string;
 
     @Column()

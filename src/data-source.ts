@@ -4,11 +4,11 @@ import MessageEntity from "./entities/MessageEntity/MessageEntity";
 import RoomEntity from "./entities/RoomEntity/RoomEntity";
 
 export const AppDataSource = new DataSource({
-    type: "mysql",
+    type: "postgres",
     host: "127.0.0.1",
-    port: 3307,
-    username: "root",
-    password: "",
+    port: 5432,
+    username: "deekol",
+    password: "postgres",
     database: "chat",
     synchronize: true,
     logging: false,
